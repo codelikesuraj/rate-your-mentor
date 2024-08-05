@@ -3,21 +3,16 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\VoterResource\Pages;
-use App\Filament\Resources\VoterResource\RelationManagers;
 use App\Models\Voter;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class VoterResource extends Resource
 {
     protected static ?string $model = Voter::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function table(Table $table): Table
     {

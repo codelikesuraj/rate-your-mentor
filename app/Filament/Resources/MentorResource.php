@@ -3,21 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MentorResource\Pages;
-use App\Filament\Resources\MentorResource\RelationManagers;
 use App\Models\Mentor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MentorResource extends Resource
 {
     protected static ?string $model = Mentor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
     public static function form(Form $form): Form
     {
@@ -36,6 +33,7 @@ class MentorResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar')
                     ->circular()
+                    ->grow(false)
                     ->defaultImageUrl(fn ($record) => "https://robohash.org/{$record->name}"),
                 Tables\Columns\TextColumn::make("name")
                     ->searchable()

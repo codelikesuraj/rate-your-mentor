@@ -10,6 +10,8 @@ class Voter extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['ip_address'];
+
     public function votes(): HasMany
     {
         return $this->hasMany(Vote::class);
