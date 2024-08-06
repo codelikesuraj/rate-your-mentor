@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for rate-your-mentor on 2024-08-05T19:39:36+01:00
+# fly.toml app configuration file generated for rate-your-mentor on 2024-08-06T12:33:09+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -19,9 +19,9 @@ console_command = 'php /var/www/html/artisan tinker'
   LOG_STDERR_FORMATTER = 'Monolog\Formatter\JsonFormatter'
   SESSION_DRIVER = 'cookie'
   SESSION_SECURE_COOKIE = 'true'
-  # -------- added these -------
+  # added these
   APP_NAME = 'RateYourMentor'
-  APP_DEBUG = false
+  APP_URL = 'https://rate-your-mentor.fly.dev'
 
 [http_service]
   internal_port = 8080
