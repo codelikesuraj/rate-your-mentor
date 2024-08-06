@@ -71,6 +71,10 @@ RUN composer install --optimize-autoloader --no-dev \
 # If we're using Filament v3 and above, run caching commands...
 RUN  php artisan icons:cache && php artisan filament:cache-components
 
+# 5. I added this - Set app to maintenance mode
+RUN php artisan down
+## don't forget to run release command "php artisan up" after deployment
+
 
 # Multi-stage build: Build static assets
 # This allows us to not include Node within the final container
