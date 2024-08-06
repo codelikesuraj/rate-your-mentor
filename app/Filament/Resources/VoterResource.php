@@ -26,9 +26,14 @@ class VoterResource extends Resource
                     ->label("Votes")
                     ->sortable(),
                 Tables\Columns\TextColumn::make("created_at")
-                    ->sortable(),
-                Tables\Columns\TextColumn::make("updated_at")
-                    ->sortable()
+            ])
+            ->actions([
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
