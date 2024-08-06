@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Middleware\ForceJsonResponse;
+use App\Http\Middleware\RecordVoterIP;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware([ForceJsonResponse::class])->group(function () {
+Route::middleware([
+    ForceJsonResponse::class,
+    RecordVoterIP::class,
+])->group(function () {
     Route::get("/categories", function () {
         // $categories = Category::with(['votes' => function($query) {
         //     $query->select('category_id', 'mentor_id', DB::raw('count(*) as total_votes'))
