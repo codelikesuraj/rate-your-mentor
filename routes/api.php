@@ -11,6 +11,10 @@ Route::middleware([
     ForceJsonResponse::class,
     RecordVoterIP::class,
 ])->group(function () {
+    Route::get("health", function () {
+        return response()->json(['message' => 'everything ok']);
+    });
+
     Route::prefix("categories")->group(function () {
         Route::get("/", function () {
             $categories = Category::with(['votes' => function($query) {
