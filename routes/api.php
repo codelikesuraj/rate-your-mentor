@@ -11,23 +11,25 @@ Route::middleware([
     ForceJsonResponse::class,
     RecordVoterIP::class,
 ])->group(function () {
-    Route::get("/categories", function () {
-        $categories = Category::with(['votes' => function($query) {
-            $query->select('category_id', 'mentor_id', DB::raw('count(*) as total_votes'))
-                  ->groupBy('category_id', 'mentor_id');
-        }])->get();
-        
-        return CategoryResource::collection($categories);
-    });
-    Route::get("/categories/{category}", function ($category) {
-        $category = Category::where('id', $category)
-            ->orwhere('slug', $category)
-            ->first();
+    Route::prefix("categories")->group(function () {
+        Route::get("/", function () {
+            $categories = Category::with(['votes' => function($query) {
+                $query->select('category_id', 'mentor_id', DB::raw('count(*) as total_votes'))
+                    ->groupBy('category_id', 'mentor_id');
+            }])->get();
 
-        if ($category) {
-            return new CategoryResource($category);
-        }
+            return CategoryResource::collection($categories);
+        });
+        Route::get("/{category}", function ($category) {
+            $category = Category::where('id', $category)
+                ->orwhere('slug', $category)
+                ->first();
 
-        return response()->json(["message" => "not found"], 404);
+            if ($category) {
+                return new CategoryResource($category);
+            }
+
+            return response()->json(["message" => "not found"], 404);
+        });
     });
 });
