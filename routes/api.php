@@ -4,6 +4,7 @@ use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Middleware\RecordVoterIP;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
@@ -11,15 +12,18 @@ Route::middleware([
     RecordVoterIP::class,
 ])->group(function () {
     Route::get("/categories", function () {
-        // $categories = Category::with(['votes' => function($query) {
-        //     $query->select('category_id', 'mentor_id', DB::raw('count(*) as total_votes'))
-        //           ->groupBy('category_id', 'mentor_id');
-        // }])->get();
-        // return CategoryResource::collection($categories);
-        return CategoryResource::collection(Category::get());  
+        $categories = Category::with(['votes' => function($query) {
+            $query->select('category_id', 'mentor_id', DB::raw('count(*) as total_votes'))
+                  ->groupBy('category_id', 'mentor_id');
+        }])->get();
+        
+        return CategoryResource::collection($categories);
     });
-    Route::get("/categories/{id}", function ($id) {
-        $category = Category::find((int) $id);
+    Route::get("/categories/{category}", function ($category) {
+        $category = Category::where('id', $category)
+            ->orwhere('slug', $category)
+            ->first();
+
         if ($category) {
             return new CategoryResource($category);
         }
