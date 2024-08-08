@@ -7,28 +7,31 @@ use Illuminate\Testing\Fluent\AssertableJson;
 uses(RefreshDatabase::class);
 
 test("fetch categories list returns 'OK' (200) response", function () {
-    Category::factory()->count(3)->create();
+    $count = (new \Faker\Generator())->randomDigitNotZero();
 
-    $this->get("/api/categories")
+    Category::factory()->count($count)->create();
+
+    $this->get("api/categories")
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) => $json->has('data', 3));
+        ->assertJson(fn (AssertableJson $json) => $json->has('data', $count));
 });
 
 test("fetch category by id & slug returns 'OK' (200) response", function () {
     $category = Category::factory()->create();
 
-    $this->get(sprintf("/api/categories/%s", $category->id))
+    $this->get(sprintf("api/categories/%s", $category->id))
         ->assertOk()
         ->assertJson(['data' => ['name' => $category->name]]);
 
-    $this->get(sprintf("/api/categories/%s", $category->slug))
+    $this->get(sprintf("api/categories/%s", $category->slug))
         ->assertOk()
         ->assertJson(['data' => ['name' => $category->name]]);
 });
 
 test("fetch category by invalid id & slug returns a 'Not Found' (404) response", function () {
-    $this->get("/api/categories/99")
+    $this->get("api/categories/99")
         ->assertNotFound();
-    $this->get("/api/categories/invalid-slug")
+
+    $this->get("api/categories/invalid-slug")
         ->assertNotFound();
 });

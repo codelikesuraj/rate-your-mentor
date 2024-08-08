@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Mentor>
  */
-class CategoryFactory extends Factory
+class MentorFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -16,11 +16,9 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $phrase = $this->faker->sentence(2);
-
         return [
-            'name' => $phrase,
-            'slug' => str()->slug($phrase)
+            'name' => $this->faker->name,
+            // 'avatar' => avatar
         ];
     }
 }
