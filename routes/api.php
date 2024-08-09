@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiHealthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MentorController;
+use App\Http\Controllers\VoteController;
 use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Middleware\RecordVoterIP;
 use Illuminate\Support\Facades\Route;
@@ -18,4 +19,6 @@ Route::middleware([
 
     Route::get("mentors", [MentorController::class, "index"]);
     Route::get("mentors/{mentor}", [MentorController::class, "show"]);
+
+    Route::post("vote", [VoteController::class, "store"]);
 });
