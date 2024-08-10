@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MentorResource extends JsonResource
+class MentorResourceBasic extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,6 +17,7 @@ class MentorResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'total_votes' => $this->votes->count(),
         ];
     }
 }

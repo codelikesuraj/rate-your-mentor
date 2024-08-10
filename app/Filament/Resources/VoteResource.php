@@ -44,6 +44,14 @@ class VoteResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make("mentor.name"),
                 Tables\Columns\TextColumn::make("created_at")
+            ])
+            ->actions([
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 

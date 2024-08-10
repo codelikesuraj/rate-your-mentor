@@ -45,3 +45,33 @@ test("voters vote is saved to DB", function () {
     
     $this->assertDatabaseCount((new Vote())->getTable(), 1);
 });
+
+test("voters cannot make duplicate vote", function () {
+    $faker = new Faker\Generator();
+
+    $category_count = $faker->randomDigitNotZero;
+    $mentor_count = $faker->randomDigitNotZero;
+
+    $categories = Category::factory()->count($category_count)->create();
+    $mentors = Mentor::factory()->count($mentor_count)->create();
+
+    $this->assertDatabaseCount((new Category())->getTable(), $category_count);
+    $this->assertDatabaseCount((new Mentor())->getTable(), $mentor_count);
+
+    $random_category = $categories[rand(0, $category_count-1)];
+    $random_mentor = $mentors[rand(0, $mentor_count-1)];
+
+    $this->post("api/vote", [
+        "category_id" => $random_category->id,
+        "mentor_id" => $random_mentor->id
+    ])->assertCreated();
+    
+    $this->assertDatabaseCount((new Vote())->getTable(), 1);
+
+    $this->post("api/vote", [
+        "category_id" => $random_category->id,
+        "mentor_id" => $random_mentor->id
+    ])->assertUnprocessable()->assertJsonValidationErrorFor("mentor_id");
+
+    $this->assertDatabaseCount((new Vote())->getTable(), 1);
+});

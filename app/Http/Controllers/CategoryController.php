@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CategoryResourceBasic;
+use App\Http\Resources\CategoryResourceExtended;
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,7 @@ class CategoryController extends Controller
                 ->groupBy('category_id', 'mentor_id');
         }])->get();
 
-        return CategoryResource::collection($categories);
+        return CategoryResourceBasic::collection($categories);
     }
 
     public function show($category)
@@ -25,7 +26,7 @@ class CategoryController extends Controller
             ->first();
 
         if ($category) {
-            return new CategoryResource($category);
+            return new CategoryResourceExtended($category);
         }
 
         return response()->json(["message" => "not found"], 404);
