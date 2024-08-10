@@ -19,10 +19,10 @@ class CategoryController extends Controller
         return CategoryResourceBasic::collection($categories);
     }
 
-    public function show($category)
+    public function show(int|string $category)
     {
-        $category = Category::where('id', $category)
-            ->orwhere('slug', $category)
+        $category = Category::where('id', (int) $category)
+            ->orwhere('slug', (string) $category)
             ->first();
 
         if ($category) {
