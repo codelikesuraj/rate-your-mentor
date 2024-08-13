@@ -2,7 +2,6 @@
 
 use App\Models\Mentor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Testing\Fluent\AssertableJson;
 
 uses(RefreshDatabase::class);
 
@@ -13,7 +12,7 @@ test("fetch mentors list returns 'OK' (200) response", function () {
 
     $this->get('api/mentors')
         ->assertStatus(200)
-        ->assertJson(fn (AssertableJson $json) => $json->has('data', $count));
+        ->assertJsonCount($count);
 });
 
 test("fetch mentor by id & slug returns 'OK' (200) response", function () {
@@ -21,7 +20,7 @@ test("fetch mentor by id & slug returns 'OK' (200) response", function () {
 
     $this->get(sprintf("api/mentors/%s", $mentor->id))
         ->assertOk()
-        ->assertJson(['data' => ['name' => $mentor->name]]);
+        ->assertJson(['name' => $mentor->name]);
 });
 
 test("fetch mentor by invalid id returns a 'Not Found' (404) response", function () {
