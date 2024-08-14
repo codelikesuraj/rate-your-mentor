@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\VoteResource;
 use App\Models\Category;
 use App\Models\Mentor;
 use App\Models\Vote;
@@ -11,6 +12,12 @@ use Illuminate\Validation\Rule;
 
 class VoteController extends Controller
 {
+    public function index(Request $request) {
+        $voter = getVoterFromRequest();
+
+        return response()->json(VoteResource::collection(Vote::where('voter_id', $voter->id)->get()), 200);
+    }
+
     public function store(Request $request) {
         $validation = Validator::make($request->all(), [
             'category_id' => [

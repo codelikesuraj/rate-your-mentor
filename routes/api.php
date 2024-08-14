@@ -20,5 +20,8 @@ Route::middleware([
     Route::get("mentors", [MentorController::class, "index"]);
     Route::get("mentors/{mentor}", [MentorController::class, "show"]);
 
-    Route::post("vote", [VoteController::class, "store"]);
+    Route::post("votes", [VoteController::class, 
+    "store"]);
+    Route::get("votes", [VoteController::class,
+    "index"]);
 });

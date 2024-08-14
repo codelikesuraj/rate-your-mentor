@@ -29,7 +29,6 @@ class RecordVoterIP
             'voter' => Voter::firstOrCreate(['ip_address' => $ip])
         ]);
 
-
         return $next($request);
     }
 }
