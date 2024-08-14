@@ -21,7 +21,9 @@ class RecordVoterIP
     {
         $ip = trim($request->ip());
 
-        abort_if($ip == "", 403);
+        if ($ip == "") {
+            return response()->json(["message" => "error resolving ip address"], 403);
+        }
 
         $request->mergeIfMissing([
             'voter' => Voter::firstOrCreate(['ip_address' => $ip])
