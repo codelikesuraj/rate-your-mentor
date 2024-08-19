@@ -14,7 +14,7 @@ class CategoryController extends Controller
         $categories = Category::with(['votes' => function($query) {
             $query->select('category_id', 'mentor_id', DB::raw('count(*) as total_votes'))
                 ->groupBy('category_id', 'mentor_id');
-        }])->get();
+        }])->latest()->get();
 
         return CategoryResourceBasic::collection($categories);
     }

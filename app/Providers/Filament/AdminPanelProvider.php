@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
             ->defaultThemeMode(ThemeMode::System)
             ->colors([
                 'primary' => Color::Teal,

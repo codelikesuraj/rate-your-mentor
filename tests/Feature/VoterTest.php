@@ -77,12 +77,11 @@ test("voters cannot make duplicate vote", function () {
     $this->assertDatabaseCount((new Vote())->getTable(), 1);
 });
 
-test("voters can retrieve their votes", function () {
+test("voters can only vote once per category", function () {
     $faker = new Faker\Generator();
 
     $category_count = $faker->randomDigitNotZero;
     $mentor_count = $faker->randomDigitNotZero;
-    $votes_count = $category_count * $mentor_count;
 
     $categories = Category::factory()->count($category_count)->create();
     $mentors = Mentor::factory()->count($mentor_count)->create();
@@ -90,20 +89,47 @@ test("voters can retrieve their votes", function () {
     $this->assertDatabaseCount((new Category())->getTable(), $category_count);
     $this->assertDatabaseCount((new Mentor())->getTable(), $mentor_count);
 
+    $random_category = $categories[rand(0, $category_count-1)];
+
+    $this->post("api/votes", [
+        "category_id" => $random_category->id,
+        "mentor_id" => $mentors[rand(0, $mentor_count-1)]->id
+    ])->assertCreated();
+    
+    $this->assertDatabaseCount((new Vote())->getTable(), 1);
+
+    $this->post("api/votes", [
+        "category_id" => $random_category->id,
+        "mentor_id" => $mentors[rand(0, $mentor_count-1)]->id
+    ])->assertUnprocessable()->assertJsonValidationErrorFor("category_id");
+
+    $this->assertDatabaseCount((new Vote())->getTable(), 1);
+});
+
+test("voters can retrieve their votes", function () {
+    $faker = new Faker\Generator();
+
+    $category_count = $faker->randomDigitNotZero;
+
+    $categories = Category::factory()->count($category_count)->create();
+    $mentor = Mentor::factory()->create();
+
+    $this->assertDatabaseCount((new Category())->getTable(), $category_count);
+    $this->assertDatabaseCount((new Mentor())->getTable(), 1);
+
     for ($i = 0; $i < $category_count; $i++) {
-        for ($j = 0; $j < $mentor_count; $j++) {
-            $this->post("api/votes", [
-                "category_id" => $categories[$i]->id,
-                "mentor_id" => $mentors[$j]->id,
-            ])->assertCreated();
-        }
+        $this->post("api/votes", [
+            "category_id" => $categories[$i]->id,
+            "mentor_id" => $mentor->id,
+        ])->assertCreated();
     }
-    $this->assertDatabaseCount((new Vote())->getTable(), $votes_count);
+
+    $this->assertDatabaseCount((new Vote())->getTable(), $category_count);
 
     $this->get("api/votes")
         ->assertOk()
         ->assertJson(fn (AssertableJson $json) =>
-            $json->has($votes_count)
+            $json->has($category_count)
                 ->first(fn (AssertableJson $json) => 
                     $json->hasAll(['id', 'category_id', 'mentor_id', 'voter_id'])
                 )

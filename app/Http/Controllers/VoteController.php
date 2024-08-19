@@ -15,14 +15,18 @@ class VoteController extends Controller
     public function index(Request $request) {
         $voter = getVoterFromRequest();
 
-        return response()->json(VoteResource::collection(Vote::where('voter_id', $voter->id)->get()), 200);
+        return response()->json(VoteResource::collection(Vote::where('voter_id', $voter->id)->latest()->get()), 200);
     }
 
     public function store(Request $request) {
         $validation = Validator::make($request->all(), [
             'category_id' => [
                 'required',
-                Rule::exists((new Category())->getTable(), 'id')
+                Rule::exists((new Category())->getTable(), 'id'),
+                Rule::unique((new Vote())->getTable())->where(function ($query) use ($request) {
+                    return $query->where('category_id', $request->category_id)
+                        ->where('voter_id', getVoterFromRequest()->id);
+                })
             ],
             'mentor_id' => [
                 'required',
@@ -34,7 +38,8 @@ class VoteController extends Controller
                 })
             ]
         ], [
-            'unique' => 'mentor already selected for this category',
+            'mentor_id.unique' => 'mentor already selected for this category',
+            'category_id.unique' => 'mentor already voted for in this category',
         ]);
 
         if ($validation->fails()) {

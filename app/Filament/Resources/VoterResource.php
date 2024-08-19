@@ -26,6 +26,7 @@ class VoterResource extends Resource
                     ->label("Votes")
                     ->sortable(),
                 Tables\Columns\TextColumn::make("created_at")
+                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
@@ -34,7 +35,8 @@ class VoterResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort("created_at", "desc");
     }
 
     public static function getPages(): array

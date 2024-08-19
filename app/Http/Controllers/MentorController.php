@@ -9,7 +9,7 @@ use App\Models\Mentor;
 class MentorController extends Controller
 {
     public function index() {
-        return MentorResourceBasic::collection(Mentor::get());
+        return MentorResourceBasic::collection(Mentor::latest()->get());
     }
     
     public function show($mentor) {
